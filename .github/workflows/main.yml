@@ -1,0 +1,26 @@
+name: Update pyfunceble
+on:
+  push:
+    paths-ignore:
+  schedule:
+    - cron: '0 0 1 * *'
+
+jobs:
+  build-pyfunceble:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v3
+
+      - name: Build pyfunceble
+        uses: actions/checkout@v3
+      - run: |
+          pip install pyfunceble
+          pyfunceble --dns-lookup-only --dns 9.9.9.10 149.112.112.10 --database-type csv --timeout 3 --trust-dns-server -f https://raw.githubusercontent.com/ant8891/test/main/036.txt
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "update pyfunceble"
+          git push
